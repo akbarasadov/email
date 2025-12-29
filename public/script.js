@@ -1,41 +1,39 @@
-const socket = io();
+import { io } from "socket.io-client";
 
-let username = "";
+const socket = io("http://localhost:3000");
 
-function setUsername() {
-  const input = document.getElementById("usernameInput");
-  if (input.value.trim() === "") return;
+const input = document.querySelector("#input");
+const messages = document.querySelector("#messages");
+const button = document.querySelector("#send");
 
-  username = input.value;
+button.onclick = () => {
+  const msg = input.value.trim();
+  if (!msg) return;
 
-  document.getElementById("username-box").style.display = "none";
-  document.getElementById("chat-container").style.display = "flex";
-}
-
-function send() {
-  const input = document.getElementById("input");
-  if (input.value.trim() === "") return;
-
-  socket.emit("chat message", {
-    name: username,
-    msg: input.value
-  });
-
+  socket.emit("chat message", { name: "User", msg });
   input.value = "";
-}
+};
+
+document.addEventListener('keydown', function (event) {
+  if (event.key === 'Enter') {
+    const msg = input.value.trim();
+    if (!msg) return;
+
+    socket.emit("chat message", { name: "User", msg });
+    input.value = "";
+  }
+});
+
+socket.on("old messages", (msgs) => {
+  msgs.forEach(m => {
+    const div = document.createElement("div");
+    div.textContent = `${m.name}: ${m.msg}`;
+    messages.appendChild(div);
+  });
+});
 
 socket.on("chat message", (data) => {
   const div = document.createElement("div");
-
-  if (data.name === username) {
-    div.className = "self";
-    div.innerText = `Siz: ${data.msg}`;
-  } else {
-    div.className = "other";
-    div.innerText = `${data.name}: ${data.msg}`;
-  }
-
-  const messages = document.getElementById("messages");
+  div.textContent = `${data.name}: ${data.msg}`;
   messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
 });
