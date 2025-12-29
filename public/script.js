@@ -14,16 +14,6 @@ button.onclick = () => {
   input.value = "";
 };
 
-document.addEventListener('keydown', function (event) {
-  if (event.key === 'Enter') {
-    const msg = input.value.trim();
-    if (!msg) return;
-
-    socket.emit("chat message", { name: "User", msg });
-    input.value = "";
-  }
-});
-
 socket.on("old messages", (msgs) => {
   msgs.forEach(m => {
     const div = document.createElement("div");
