@@ -1,21 +1,41 @@
 const socket = io();
-let selfName = "Siz"; // keyin username qo‘shsak oson o‘zgaradi
+
+let username = "";
+
+function setUsername() {
+  const input = document.getElementById("usernameInput");
+  if (input.value.trim() === "") return;
+
+  username = input.value;
+
+  document.getElementById("username-box").style.display = "none";
+  document.getElementById("chat-container").style.display = "flex";
+}
 
 function send() {
   const input = document.getElementById("input");
   if (input.value.trim() === "") return;
-  socket.emit("chat message", { msg: input.value, name: selfName });
+
+  socket.emit("chat message", {
+    name: username,
+    msg: input.value
+  });
+
   input.value = "";
 }
 
 socket.on("chat message", (data) => {
   const div = document.createElement("div");
-  if (data.name === selfName) {
+
+  if (data.name === username) {
     div.className = "self";
+    div.innerText = `Siz: ${data.msg}`;
   } else {
     div.className = "other";
+    div.innerText = `${data.name}: ${data.msg}`;
   }
-  div.innerText = `${data.name}: ${data.msg}`;
-  document.getElementById("messages").appendChild(div);
-  document.getElementById("messages").scrollTop = document.getElementById("messages").scrollHeight;
+
+  const messages = document.getElementById("messages");
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
 });
