@@ -1,16 +1,17 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>Real Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="chat">
+<div id="chat-container">
   <div id="messages"></div>
-  <input id="input" placeholder="Xabar yozing..." />
-  <button onclick="send()">Yuborish</button>
+  <div id="input-container">
+    <input id="input" placeholder="Xabar yozing">
+    <!-- <button onclick="send()">Yuborish</button> -->
+  </div>
 </div>
 
 <script src="/socket.io/socket.io.js"></script>
