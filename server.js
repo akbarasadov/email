@@ -1,18 +1,15 @@
 const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
 const fs = require("fs");
 const path = require("path");
+const cors = require("cors");
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
+app.use(cors());
+app.use(express.json());
 
-app.use(express.static("public"));
+const FILE = path.join(__dirname, "users.json");
 
-const FILE = path.join(__dirname, "messages.json");
-
-function readMessages() {
+function readUsers() {
   try {
     return JSON.parse(fs.readFileSync(FILE, "utf8"));
   } catch {
@@ -20,38 +17,23 @@ function readMessages() {
   }
 }
 
-function saveMessages(messages) {
-  fs.writeFileSync(FILE, JSON.stringify(messages, null, 2));
+function saveUsers(users) {
+  fs.writeFileSync(FILE, JSON.stringify(users, null, 2));
 }
 
-io.on("connection", (socket) => {
+app.post("/users", (req, res) => {
+  const users = readUsers();
+  const user = req.body;
 
-  socket.emit("all messages", readMessages());
-
-  socket.on("chat message", (data) => {
-    const messages = readMessages();
-
-    const msg = {
-      id: Date.now(),
-      name: data.name,
-      msg: data.msg
-    };
-
-    messages.push(msg);
-    saveMessages(messages);
-
-    io.emit("all messages", messages);
+  users.push({
+    id: Date.now(),
+    ...user
   });
 
-  socket.on("delete message", (id) => {
-    let messages = readMessages();
-    messages = messages.filter(m => m.id !== id);
-    saveMessages(messages);
-
-    io.emit("all messages", messages);
-  });
+  saveUsers(users);
+  res.status(201).json({ message: "User saved" });
 });
 
-server.listen(3000, () => {
-  console.log("Server ishlayapti: http://localhost:3000");
+app.listen(8080, () => {
+  console.log("Server running on http://localhost:8080");
 });
