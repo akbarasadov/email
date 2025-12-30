@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"json-server -p 8080 -w db.json\" \"vite\" ",
     "start": "node server.js"
   },
   "keywords": [],
@@ -12,7 +12,9 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "concurrently": "^9.2.1",
     "express": "^5.2.1",
+    "json-server": "^1.0.0-beta.3",
     "socket.io": "^4.8.3"
   }
 }
