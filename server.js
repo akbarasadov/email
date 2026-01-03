@@ -1,39 +1,21 @@
 const express = require("express");
-const fs = require("fs");
-const path = require("path");
-const cors = require("cors");
+const http = require("http");
+const { Server } = require("socket.io");
 
 const app = express();
-app.use(cors());
-app.use(express.json());
+const server = http.createServer(app);
 
-const FILE = path.join(__dirname, "users.json");
-
-function readUsers() {
-  try {
-    return JSON.parse(fs.readFileSync(FILE, "utf8"));
-  } catch {
-    return [];
-  }
-}
-
-function saveUsers(users) {
-  fs.writeFileSync(FILE, JSON.stringify(users, null, 2));
-}
-
-app.post("/users", (req, res) => {
-  const users = readUsers();
-  const user = req.body;
-
-  users.push({
-    id: Date.now(),
-    ...user
-  });
-
-  saveUsers(users);
-  res.status(201).json({ message: "User saved" });
+const io = new Server(server, {
+  cors: { origin: "http://localhost:5173" }
 });
 
-app.listen(8080, () => {
-  console.log("Server running on http://localhost:8080");
+io.on("connection", socket => {
+  const { name } = socket.handshake.auth;
+  console.log("Client ulandi:", name);
+
+  socket.on("chat message", data => io.emit("chat message", data));
+
+  socket.on("disconnect", () => console.log("Client chiqdi:", name));
 });
+
+server.listen(8080, () => console.log("Socket.IO server 8080 da ishlayapti"));

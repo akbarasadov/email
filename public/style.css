@@ -60,7 +60,7 @@ body {
   outline: none;
 }
 
-.button {
+button {
   padding: 10px 20px;
   margin-left: 10px;
   border: none;
