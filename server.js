@@ -1,38 +1,41 @@
 const express = require("express");
 const http = require("http");
+const path = require("path");
 const { Server } = require("socket.io");
-const cors = require("cors");
 
 const app = express();
 const server = http.createServer(app);
 
-app.use(cors({
-  origin: "http://localhost:5173",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
-
-app.use(express.json());
-
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"]
+    origin: "*"
   }
 });
 
-app.post("/users", (req, res) => {
-  console.log("User keldi:", req.body);
-  res.status(201).json({ success: true });
+// 🔥 MUHIM: VITE BUILD NI SERVE QILISH
+app.use(express.static(path.join(__dirname, "dist")));
+
+// 🔥 HAR QANDAY ROUTE → index.html
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
+// SOCKET
 io.on("connection", socket => {
   const { name } = socket.handshake.auth;
   console.log("Client ulandi:", name);
 
-  socket.on("chat message", data => io.emit("chat message", data));
+  socket.on("chat message", data => {
+    io.emit("chat message", data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Client chiqdi:", name);
+  });
 });
 
-server.listen(8080, () =>
-  console.log("Server 8080 da ishlayapti")
-);
+// 🔥 RENDER PORT
+const PORT = process.env.PORT || 8080;
+server.listen(PORT, () => {
+  console.log("Server running on port", PORT);
+});
