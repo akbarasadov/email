@@ -115,3 +115,11 @@ button {
   font-size: 14px;
   color: red;
 }
+
+.right_massage{
+  text-align: right;
+}
+
+.left_massage{
+  text-align: left;
+}

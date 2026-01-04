@@ -1,3 +1,5 @@
+// const { name } = require("server/plugins/socket");
+
 const name = localStorage.getItem("name");
 if (!name) window.location.href = "/";
 
@@ -16,7 +18,18 @@ sendBtn.addEventListener("click", () => {
 });
 
 socket.on("chat message", data => {
-  const div = document.createElement("div");
-  div.innerHTML = `<b>${data.name}</b>: ${data.msg}`;
-  messages.appendChild(div);
+  if (data.name === name) {
+    const div = document.createElement("div");
+    div.innerHTML = `<b>${name}</b>: ${data.msg}`;
+    div.classList.add("right_massage")
+    div.classList.remove("left_massage")
+    messages.appendChild(div);
+  }
+  if (data.name !== name) {
+    const div = document.createElement("div");
+    div.innerHTML = `<b>${data.name}</b>: ${data.msg}`;
+    div.classList.remove("right_massage")
+    div.classList.add("left_massage")
+    messages.appendChild(div);
+  }
 });
