@@ -6,23 +6,23 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 
-const io = new Server(server, {
-  cors: { origin: "*" }
+app.use(express.json());
+
+// API
+app.post("/users", (req, res) => {
+  console.log("New user:", req.body);
+  res.status(201).json({ ok: true });
 });
 
-// VITE BUILD
+// FRONTEND
 app.use(express.static(path.join(__dirname, "dist")));
-
-// ❗ EXPRESS 5 UCHUN TO‘G‘RI CATCH-ALL
 app.use((req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
 // SOCKET
+const io = new Server(server);
 io.on("connection", socket => {
-  const { name } = socket.handshake.auth;
-  console.log("Client ulandi:", name);
-
   socket.on("chat message", data => {
     io.emit("chat message", data);
   });
