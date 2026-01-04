@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
 
 
-            const res = await fetch("http://localhost:8080/users", {
+            fetch("/users", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
