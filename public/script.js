@@ -1,4 +1,4 @@
-// const { name } = require("server/plugins/socket");
+const { name } = require("server/plugins/socket");
 
 const name = localStorage.getItem("name");
 if (!name) window.location.href = "/";

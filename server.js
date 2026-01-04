@@ -7,16 +7,14 @@ const app = express();
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  cors: {
-    origin: "*"
-  }
+  cors: { origin: "*" }
 });
 
-// 🔥 MUHIM: VITE BUILD NI SERVE QILISH
+// VITE BUILD
 app.use(express.static(path.join(__dirname, "dist")));
 
-// 🔥 HAR QANDAY ROUTE → index.html
-app.get("*", (req, res) => {
+// ❗ EXPRESS 5 UCHUN TO‘G‘RI CATCH-ALL
+app.use((req, res) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
@@ -28,14 +26,9 @@ io.on("connection", socket => {
   socket.on("chat message", data => {
     io.emit("chat message", data);
   });
-
-  socket.on("disconnect", () => {
-    console.log("Client chiqdi:", name);
-  });
 });
 
-// 🔥 RENDER PORT
 const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
-  console.log("Server running on port", PORT);
+  console.log("Server running on", PORT);
 });
