@@ -6,7 +6,6 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 
-// JSON
 app.use(express.json());
 
 // API
@@ -15,32 +14,22 @@ app.post("/users", (req, res) => {
   res.status(201).json({ ok: true });
 });
 
-// STATIC FILES
+// STATIC
 const distPath = path.join(__dirname, "dist");
 app.use(express.static(distPath));
 
-// HTML routing
-app.get("*", (req, res) => {
-  const filePath = path.join(distPath, req.path);
-
-  // agar chat.html yoki boshqa .html bo‘lsa
+// ⚠️ EXPRESS 5 UCHUN TO‘G‘RI WILDCARD
+app.get("/*", (req, res) => {
   if (req.path.endsWith(".html")) {
-    return res.sendFile(filePath, err => {
-      if (err) {
-        res.sendFile(path.join(distPath, "index.html"));
-      }
-    });
+    return res.sendFile(path.join(distPath, req.path));
   }
 
-  // default → index.html
   res.sendFile(path.join(distPath, "index.html"));
 });
 
 // SOCKET
 const io = new Server(server, {
-  cors: {
-    origin: "*"
-  }
+  cors: { origin: "*" }
 });
 
 io.on("connection", socket => {
