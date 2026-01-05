@@ -15,6 +15,11 @@ body {
 
 #chat-container {
   background: #1f2d3d;
+  width: 100%;
+  max-width: 420px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 #messages {
