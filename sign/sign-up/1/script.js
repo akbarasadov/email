@@ -1,6 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
     const button = document.querySelector(".button");
 
+    let name = localStorage.getItem("name")
+
+    if (name) {
+        window.location.href = "/chat.html"
+    }
+
     button.onclick = async (event) => {
         event.preventDefault();
 

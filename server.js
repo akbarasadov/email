@@ -9,9 +9,16 @@ const server = http.createServer(app);
 // JSON
 app.use(express.json());
 
-// API
+const fs = require("fs");
+
 app.post("/users", (req, res) => {
-  console.log("New user:", req.body);
+  const data = fs.readFileSync("db.json", "utf-8");
+  const json = JSON.parse(data);
+
+  json.users.push({ id: Date.now(), ...req.body });
+
+  fs.writeFileSync("db.json", JSON.stringify(json, null, 2));
+
   res.status(201).json({ ok: true });
 });
 
