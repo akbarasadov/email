@@ -6,6 +6,7 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 
+// JSON
 app.use(express.json());
 
 // API
@@ -14,25 +15,20 @@ app.post("/users", (req, res) => {
   res.status(201).json({ ok: true });
 });
 
-// STATIC FILES
-const distPath = path.join(__dirname, "dist");
-app.use(express.static(distPath));
+// 🔥 STATIC PAPKALAR
+app.use(express.static(path.join(__dirname)));        // index.html, chat.html
+app.use("/public", express.static(path.join(__dirname, "public")));
+app.use("/sign", express.static(path.join(__dirname, "sign")));
 
-// ✅ EXPRESS 5 UCHUN TO‘G‘RI FALLBACK
+// 🔥 EXPRESS 5 FALLBACK
 app.use((req, res) => {
-  const requestedFile = path.join(distPath, req.path);
-
-  // agar .html bo‘lsa → o‘shani ber
-  if (req.path.endsWith(".html")) {
-    return res.sendFile(requestedFile, err => {
-      if (err) {
-        res.sendFile(path.join(distPath, "index.html"));
-      }
-    });
+  // agar aniq html so‘ralsa
+  if (req.path === "/chat.html") {
+    return res.sendFile(path.join(__dirname, "chat.html"));
   }
 
-  // boshqa hamma holatda index.html
-  res.sendFile(path.join(distPath, "index.html"));
+  // default → registratsiya
+  res.sendFile(path.join(__dirname, "index.html"));
 });
 
 // SOCKET
