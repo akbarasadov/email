@@ -1,119 +1,126 @@
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 }
 
 body {
-  margin: 0;
+  background: #0e1621;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #0f172a; /* dark background */
-  font-family: "Segoe UI", Roboto, Arial, sans-serif;
 }
 
-/* CHAT CONTAINER */
 #chat-container {
   width: 100%;
   max-width: 420px;
-  height: 620px;
-  background: #ffffff;
-  border-radius: 16px;
+  height: 100vh;
+  background: #17212b;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
 }
 
-/* MESSAGES */
 #messages {
   flex: 1;
-  padding: 14px;
+  padding: 10px;
   overflow-y: auto;
-  background: linear-gradient(#e5f1ff, #dbeafe);
 }
 
-/* MESSAGE BUBBLE */
 .message {
   max-width: 75%;
   padding: 8px 12px;
-  margin-bottom: 10px;
-  border-radius: 14px;
-  font-size: 14px;
-  line-height: 1.4;
-  word-wrap: break-word;
+  margin-bottom: 8px;
+  border-radius: 12px;
   position: relative;
+  word-wrap: break-word;
+  font-size: 14px;
 }
 
-/* USER MESSAGE */
+/* O'zing yuborgan xabar */
 .self {
-  background: #4f93ff;
-  color: #fff;
+  background: #2b5278;
   margin-left: auto;
+  color: #fff;
   border-bottom-right-radius: 4px;
 }
 
-/* OTHER MESSAGE */
+/* Boshqa odam */
 .other {
-  background: #f1f5f9;
-  color: #111;
+  background: #182533;
   margin-right: auto;
+  color: #e6e6e6;
   border-bottom-left-radius: 4px;
 }
 
-/* DELETE BUTTON */
-.delete-btn {
-  position: absolute;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: none;
-  background: none;
-  border: none;
-  color: #ef4444;
-  cursor: pointer;
+.name {
   font-size: 12px;
+  opacity: 0.7;
+  margin-bottom: 2px;
 }
 
-.message:hover .delete-btn {
-  display: block;
+.meta {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+  font-size: 10px;
+  opacity: 0.6;
+  margin-top: 4px;
 }
 
-/* INPUT AREA */
+.seen {
+  color: #4ea6ff;
+}
+
+/* Input */
 #input-container {
   display: flex;
-  align-items: center;
   padding: 10px;
-  background: #f8fafc;
-  border-top: 1px solid #e2e8f0;
+  background: #17212b;
+  border-top: 1px solid #0e1621;
 }
 
 #input {
   flex: 1;
   padding: 10px 14px;
   border-radius: 20px;
-  border: 1px solid #cbd5f5;
-  outline: none;
-  font-size: 14px;
-}
-
-#input:focus {
-  border-color: #4f93ff;
-}
-
-/* SEND BUTTON */
-#sendBtn {
-  margin-left: 8px;
-  padding: 10px 18px;
-  border-radius: 20px;
   border: none;
-  background: #4f93ff;
+  outline: none;
+  background: #0e1621;
   color: #fff;
   font-size: 14px;
+}
+
+#input::placeholder {
+  color: #777;
+}
+
+#sendBtn {
+  margin-left: 10px;
+  padding: 10px 16px;
+  border-radius: 50%;
+  border: none;
+  background: #2b5278;
+  color: #fff;
   cursor: pointer;
-  transition: 0.2s;
 }
 
 #sendBtn:hover {
-  background: #2563eb;
+  background: #3a6ea5;
+}
+
+/* Delete */
+.delete-btn {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  display: none;
+  opacity: 0.7;
+}
+
+.message:hover .delete-btn {
+  display: block;
 }

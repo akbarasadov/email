@@ -6,46 +6,42 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 
-// JSON
 app.use(express.json());
 
-const fs = require("fs");
-
+// ===== API =====
 app.post("/users", (req, res) => {
-  const data = fs.readFileSync("db.json", "utf-8");
-  const json = JSON.parse(data);
-
-  json.users.push({ id: Date.now(), ...req.body });
-
-  fs.writeFileSync("db.json", JSON.stringify(json, null, 2));
-
+  console.log("New user:", req.body);
   res.status(201).json({ ok: true });
 });
 
-// 🔥 STATIC PAPKALAR
-app.use(express.static(path.join(__dirname)));        // index.html, chat.html
-app.use("/public", express.static(path.join(__dirname, "public")));
-app.use("/sign", express.static(path.join(__dirname, "sign")));
+// ===== FRONTEND =====
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(__dirname));
 
-// 🔥 EXPRESS 5 FALLBACK
-app.use((req, res) => {
-  // agar aniq html so‘ralsa
-  if (req.path === "/chat.html") {
-    return res.sendFile(path.join(__dirname, "chat.html"));
-  }
-
-  // default → registratsiya
+app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// SOCKET
-const io = new Server(server, {
-  cors: { origin: "*" }
+app.get("/chat", (req, res) => {
+  res.sendFile(path.join(__dirname, "chat.html"));
 });
 
+// ===== SOCKET =====
+let messages = [];
+
+const io = new Server(server);
+
 io.on("connection", socket => {
+  socket.emit("old messages", messages);
+
   socket.on("chat message", data => {
+    messages.push(data);
     io.emit("chat message", data);
+  });
+
+  socket.on("delete message", id => {
+    messages = messages.filter(m => m.id !== id);
+    io.emit("delete message", id);
   });
 });
 
