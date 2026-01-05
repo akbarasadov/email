@@ -14,16 +14,24 @@ app.post("/users", (req, res) => {
   res.status(201).json({ ok: true });
 });
 
-// STATIC
+// STATIC FILES
 const distPath = path.join(__dirname, "dist");
 app.use(express.static(distPath));
 
-// ⚠️ EXPRESS 5 UCHUN TO‘G‘RI WILDCARD
-app.get("/*", (req, res) => {
+// ✅ EXPRESS 5 UCHUN TO‘G‘RI FALLBACK
+app.use((req, res) => {
+  const requestedFile = path.join(distPath, req.path);
+
+  // agar .html bo‘lsa → o‘shani ber
   if (req.path.endsWith(".html")) {
-    return res.sendFile(path.join(distPath, req.path));
+    return res.sendFile(requestedFile, err => {
+      if (err) {
+        res.sendFile(path.join(distPath, "index.html"));
+      }
+    });
   }
 
+  // boshqa hamma holatda index.html
   res.sendFile(path.join(distPath, "index.html"));
 });
 
