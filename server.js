@@ -6,6 +6,7 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 
+// JSON
 app.use(express.json());
 
 // API
@@ -14,14 +15,34 @@ app.post("/users", (req, res) => {
   res.status(201).json({ ok: true });
 });
 
-// FRONTEND
-app.use(express.static(path.join(__dirname, "dist")));
-app.use((req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
+// STATIC FILES
+const distPath = path.join(__dirname, "dist");
+app.use(express.static(distPath));
+
+// HTML routing
+app.get("*", (req, res) => {
+  const filePath = path.join(distPath, req.path);
+
+  // agar chat.html yoki boshqa .html bo‘lsa
+  if (req.path.endsWith(".html")) {
+    return res.sendFile(filePath, err => {
+      if (err) {
+        res.sendFile(path.join(distPath, "index.html"));
+      }
+    });
+  }
+
+  // default → index.html
+  res.sendFile(path.join(distPath, "index.html"));
 });
 
 // SOCKET
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "*"
+  }
+});
+
 io.on("connection", socket => {
   socket.on("chat message", data => {
     io.emit("chat message", data);
