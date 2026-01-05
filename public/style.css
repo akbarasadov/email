@@ -1,125 +1,119 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background: #f0f0f0;
+  margin: 0;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  margin: 0;
+  background: #0f172a; /* dark background */
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
 }
 
+/* CHAT CONTAINER */
 #chat-container {
-  background: #fff;
   width: 100%;
-  max-width: 400px;
-  height: 600px;
-  border-radius: 10px;
+  max-width: 420px;
+  height: 620px;
+  background: #ffffff;
+  border-radius: 16px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
 }
 
+/* MESSAGES */
 #messages {
   flex: 1;
-  padding: 10px;
+  padding: 14px;
   overflow-y: auto;
-  background: #eaeaea;
+  background: linear-gradient(#e5f1ff, #dbeafe);
 }
 
-#messages div {
+/* MESSAGE BUBBLE */
+.message {
+  max-width: 75%;
   padding: 8px 12px;
-  margin-bottom: 8px;
-  border-radius: 20px;
-  max-width: 70%;
+  margin-bottom: 10px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.4;
+  word-wrap: break-word;
+  position: relative;
 }
 
-#messages div.self {
-  background: #4caf50;
-  color: white;
+/* USER MESSAGE */
+.self {
+  background: #4f93ff;
+  color: #fff;
   margin-left: auto;
+  border-bottom-right-radius: 4px;
 }
 
-#messages div.other {
-  background: #ccc;
-  color: black;
+/* OTHER MESSAGE */
+.other {
+  background: #f1f5f9;
+  color: #111;
   margin-right: auto;
+  border-bottom-left-radius: 4px;
 }
 
+/* DELETE BUTTON */
+.delete-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  background: none;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.message:hover .delete-btn {
+  display: block;
+}
+
+/* INPUT AREA */
 #input-container {
   display: flex;
+  align-items: center;
   padding: 10px;
-  background: #ddd;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
 }
 
 #input {
   flex: 1;
-  padding: 10px;
+  padding: 10px 14px;
   border-radius: 20px;
-  border: none;
+  border: 1px solid #cbd5f5;
   outline: none;
-}
-
-button {
-  padding: 10px 20px;
-  margin-left: 10px;
-  border: none;
-  border-radius: 20px;
-  background: #4caf50;
-  color: white;
-  cursor: pointer;
-}
-/* 
-.del_btn {
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  display: none;
-}
-
-.self:hover .del_btn{
-  display: block;
-}
-
-.other:hover .del_btn{
-  display: block;
-}
-
-.self:hover{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.other:hover{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-} */
-
-
-.message {
-  position: relative;
-  padding: 6px 30px 6px 6px;
-}
-
-.delete-btn {
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
-  display: none;
-  cursor: pointer;
-  background: none;
-  border: none;
   font-size: 14px;
-  color: red;
 }
 
-.right_massage{
-  text-align: right;
+#input:focus {
+  border-color: #4f93ff;
 }
 
-.left_massage{
-  text-align: left;
+/* SEND BUTTON */
+#sendBtn {
+  margin-left: 8px;
+  padding: 10px 18px;
+  border-radius: 20px;
+  border: none;
+  background: #4f93ff;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+#sendBtn:hover {
+  background: #2563eb;
 }

@@ -22,14 +22,15 @@ sendBtn.addEventListener("click", () => {
 
 socket.on("chat message", data => {
   const div = document.createElement("div");
+  div.classList.add("message");
 
   if (data.name === name) {
-    div.classList.add("right_massage");
-    div.innerHTML = `<b>Me</b>: ${data.msg}`;
+    div.classList.add("self");
   } else {
-    div.classList.add("left_massage");
-    div.innerHTML = `<b>${data.name}</b>: ${data.msg}`;
+    div.classList.add("other");
   }
 
+  div.innerHTML = `<strong>${data.name}</strong><br>${data.msg}`;
   messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
 });
