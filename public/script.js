@@ -3,7 +3,9 @@ if (!name) {
   window.location.href = "/";
 }
 
-const socket = io();
+const socket = io({
+  transports: ["websocket"]
+});
 
 const messages = document.getElementById("messages");
 const input = document.getElementById("input");
@@ -15,12 +17,10 @@ function formatTime() {
          d.getMinutes().toString().padStart(2, "0");
 }
 
-// Eski xabarlar
 socket.on("old messages", msgs => {
   msgs.forEach(addMessage);
 });
 
-// Yuborish
 sendBtn.addEventListener("click", sendMessage);
 input.addEventListener("keypress", e => {
   if (e.key === "Enter") sendMessage();
@@ -40,7 +40,6 @@ function sendMessage() {
   input.value = "";
 }
 
-// Qabul qilish
 socket.on("chat message", addMessage);
 
 function addMessage(data) {
@@ -70,7 +69,6 @@ function addMessage(data) {
   messages.scrollTop = messages.scrollHeight;
 }
 
-// O‘chirish
 socket.on("delete message", id => {
   [...document.querySelectorAll(".message")].forEach(m => {
     if (m.innerHTML.includes(id)) m.remove();
