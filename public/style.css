@@ -110,9 +110,3 @@ body {
 .time{
   text-align: right;
 }
-
-.for_each_massage{
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-}

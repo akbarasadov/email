@@ -45,7 +45,6 @@ function addMessage(data) {
   const isMe = data.name === name;
   div.classList.add(isMe ? "self" : "other");
 
-  div.className = "for_each_massage"
 
   div.innerHTML = `
     ${!isMe ? `<div class="name">${data.name}</div>` : ""}
@@ -53,8 +52,8 @@ function addMessage(data) {
     <div class="meta">
       <span class="time">${data.time}</span>
       ${isMe ? `<span class="seen">✓✓</span>` : ""}
+      </div>
       ${isMe ? `<span class="delete-btn">🗑</span>` : ""}
-    </div>
   `;
 
   if (isMe) {
@@ -67,7 +66,6 @@ function addMessage(data) {
   messages.scrollTop = messages.scrollHeight;
 }
 
-// ===== O‘CHIRISH =====
 socket.on("delete message", id => {
   const el = document.querySelector(`.message[data-id="${id}"]`);
   if (el) el.remove();
