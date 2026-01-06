@@ -44,13 +44,13 @@ function addMessage(data) {
   div.classList.add(isMe ? "self" : "other");
 
   div.innerHTML = `
-    ${!isMe ? <div class="name">${data.name}</div> : ""}
+    ${!isMe ? `<div class="name">${data.name}</div>` : ""}
     <div>${data.msg}</div>
     <div class="meta">
       <span>${data.time}</span>
-      ${isMe ? <span class="seen">✓✓</span> : ""}
+      ${isMe ? `<span class="seen">✓✓</span>` : ""}
     </div>
-    ${isMe ? <span class="delete-btn">🗑</span> : ""}
+    ${isMe ? `<span class="delete-btn">🗑</span>` : ""}
   `;
 
   if (isMe) {
