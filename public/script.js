@@ -7,41 +7,68 @@ const messages = document.getElementById("messages");
 const input = document.getElementById("input");
 const sendBtn = document.getElementById("sendBtn");
 
-function getTime() {
-  const d = new Date();
-  return d.getHours().toString().padStart(2, "0") + ":" +
-         d.getMinutes().toString().padStart(2, "0");
-}
-
 function sendMessage() {
   if (!input.value.trim()) return;
 
-  socket.emit("chat message", {
+  const msg = {
+    id: Date.now(),
     name,
-    text: input.value,
-    time: getTime()
-  });
+    msg: input.value,
+    time: new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    })
+  };
 
+  socket.emit("chat message", msg);
   input.value = "";
 }
 
-sendBtn.onclick = sendMessage;
-
-input.addEventListener("keydown", e => {
-  if (e.key === "Enter") sendMessage();
+sendBtn.addEventListener("click", sendMessage);
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    sendMessage();
+  }
 });
 
-socket.on("chat message", data => {
+socket.on("old messages", msgs => {
+  msgs.forEach(addMessage);
+});
+
+socket.on("chat message", addMessage);
+
+function addMessage(data) {
   const div = document.createElement("div");
   div.classList.add("message");
-  div.classList.add(data.name === name ? "self" : "other");
+  div.dataset.id = data.id;
+
+  const isMe = data.name === name;
+  div.classList.add(isMe ? "self" : "other");
+
+  div.className = "for_each_massage"
 
   div.innerHTML = `
-    ${data.name !== name ? <div class="name">${data.name}</div> : ""}
-    <div>${data.text}</div>
-    <div class="time">${data.time}</div>
+    ${!isMe ? `<div class="name">${data.name}</div>` : ""}
+    <div>${data.msg}</div>
+    <div class="meta">
+      <span class="time">${data.time}</span>
+      ${isMe ? `<span class="seen">✓✓</span>` : ""}
+    </div>
+    ${isMe ? `<span class="delete-btn">🗑</span>` : ""}
   `;
+
+  if (isMe) {
+    div.querySelector(".delete-btn").onclick = () => {
+      socket.emit("delete message", data.id);
+    };
+  }
 
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
+}
+
+// ===== O‘CHIRISH =====
+socket.on("delete message", id => {
+  const el = document.querySelector(`.message[data-id="${id}"]`);
+  if (el) el.remove();
 });
