@@ -80,13 +80,13 @@ if (!name) {
   window.location.href = "/";
 }
 
-const socket = io(); // MUHIM!
+const socket = io();
 
 const messages = document.getElementById("messages");
 const input = document.getElementById("input");
 const sendBtn = document.getElementById("sendBtn");
 
-sendBtn.addEventListener("click", () => {
+function sendMessage() {
   if (!input.value.trim()) return;
 
   socket.emit("chat message", {
@@ -99,7 +99,17 @@ sendBtn.addEventListener("click", () => {
   });
 
   input.value = "";
+}
+
+sendBtn.addEventListener("click", sendMessage);
+
+
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    sendMessage();
+  }
 });
+
 
 socket.on("chat message", data => {
   const div = document.createElement("div");
@@ -112,7 +122,7 @@ socket.on("chat message", data => {
   }
 
   div.innerHTML = `
-  ${data.msg}
+ <b>${data.name}</b>: ${data.msg}
   <div style="font-size:10px;opacity:.6;text-align:right;">
     ${data.time}
   </div>
