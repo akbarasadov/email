@@ -91,7 +91,11 @@ sendBtn.addEventListener("click", () => {
 
   socket.emit("chat message", {
     name,
-    msg: input.value
+    msg: input.value,
+    time: new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    })
   });
 
   input.value = "";
@@ -99,6 +103,20 @@ sendBtn.addEventListener("click", () => {
 
 socket.on("chat message", data => {
   const div = document.createElement("div");
-  div.innerHTML = `<b>${data.name}</b>: ${data.msg}`;
+  div.classList.add("message");
+
+  if (data.name === name) {
+    div.classList.add("self");
+  } else {
+    div.classList.add("other");
+  }
+
+  div.innerHTML = `
+  ${data.msg}
+  <div style="font-size:10px;opacity:.6;text-align:right;">
+    ${data.time}
+  </div>
+`;
   messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
 });
