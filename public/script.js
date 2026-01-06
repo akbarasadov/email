@@ -1,72 +1,61 @@
 const name = localStorage.getItem("name");
-if (!name) window.location.href = "/";
+if (!name) location.href = "/";
 
 const socket = io();
-
 const messages = document.getElementById("messages");
 const input = document.getElementById("input");
 const sendBtn = document.getElementById("sendBtn");
 
-function sendMessage() {
+function time() {
+  return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+sendBtn.onclick = send;
+input.onkeydown = e => e.key === "Enter" && send();
+
+function send() {
   if (!input.value.trim()) return;
 
-  const msg = {
+  socket.emit("chat message", {
     id: Date.now(),
     name,
-    msg: input.value,
-    time: new Date().toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit"
-    })
-  };
+    text: input.value,
+    time: time(),
+    read: false
+  });
 
-  socket.emit("chat message", msg);
   input.value = "";
 }
 
-sendBtn.addEventListener("click", sendMessage);
-input.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    sendMessage();
-  }
-});
-
-socket.on("old messages", msgs => {
-  msgs.forEach(addMessage);
-});
-
+socket.on("old messages", msgs => msgs.forEach(addMessage));
 socket.on("chat message", addMessage);
 
-function addMessage(data) {
+function addMessage(m) {
   const div = document.createElement("div");
-  div.classList.add("message");
-  div.dataset.id = data.id;
-
-  const isMe = data.name === name;
-  div.classList.add(isMe ? "self" : "other");
-
+  div.className = "msg " + (m.name === name ? "me" : "other");
+  div.dataset.id = m.id;
 
   div.innerHTML = `
-    ${!isMe ? `<div class="name">${data.name}</div>` : ""}
-    <div>${data.msg}</div>
+    <div class="text">${m.text}</div>
     <div class="meta">
-      <span class="time">${data.time}</span>
-      ${isMe ? `<span class="seen">✓✓</span>` : ""}
-      </div>
-      ${isMe ? `<span class="delete-btn">🗑</span>` : ""}
+      ${m.time}
+      ${m.name === name ? `<span class="ticks">✓✓</span>` : ""}
+    </div>
   `;
-
-  if (isMe) {
-    div.querySelector(".delete-btn").onclick = () => {
-      socket.emit("delete message", data.id);
-    };
-  }
 
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
+
+  if (m.name !== name) {
+    socket.emit("read message", m.id);
+  }
 }
 
+socket.on("read message", id => {
+  const msg = document.querySelector(`[data-id="${id}"] .ticks`);
+  if (msg) msg.classList.add("read");
+});
+
 socket.on("delete message", id => {
-  const el = document.querySelector(`.message[data-id="${id}"]`);
-  if (el) el.remove();
+  document.querySelector(`[data-id="${id}"]`)?.remove();
 });
