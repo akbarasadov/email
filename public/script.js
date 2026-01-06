@@ -1,61 +1,41 @@
-const name = localStorage.getItem("name");
-if (!name) location.href = "/";
+document.addEventListener("DOMContentLoaded", () => {
+  const name = localStorage.getItem("name");
+  if (!name) return alert("Name yo‘q!");
 
-const socket = io();
-const messages = document.getElementById("messages");
-const input = document.getElementById("input");
-const sendBtn = document.getElementById("sendBtn");
+  const socket = io();
 
-function time() {
-  return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-}
+  const messages = document.getElementById("messages");
+  const input = document.getElementById("input");
+  const sendBtn = document.getElementById("sendBtn");
 
-sendBtn.onclick = send;
-input.onkeydown = e => e.key === "Enter" && send();
+  function sendMessage() {
+    if (!input.value.trim()) return;
 
-function send() {
-  if (!input.value.trim()) return;
+    socket.emit("chat message", {
+      name,
+      msg: input.value,
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+      })
+    });
 
-  socket.emit("chat message", {
-    id: Date.now(),
-    name,
-    text: input.value,
-    time: time(),
-    read: false
-  });
-
-  input.value = "";
-}
-
-socket.on("old messages", msgs => msgs.forEach(addMessage));
-socket.on("chat message", addMessage);
-
-function addMessage(m) {
-  const div = document.createElement("div");
-  div.className = "msg " + (m.name === name ? "me" : "other");
-  div.dataset.id = m.id;
-
-  div.innerHTML = `
-    <div class="text">${m.text}</div>
-    <div class="meta">
-      ${m.time}
-      ${m.name === name ? `<span class="ticks">✓✓</span>` : ""}
-    </div>
-  `;
-
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
-
-  if (m.name !== name) {
-    socket.emit("read message", m.id);
+    input.value = "";
   }
-}
 
-socket.on("read message", id => {
-  const msg = document.querySelector(`[data-id="${id}"] .ticks`);
-  if (msg) msg.classList.add("read");
-});
+  sendBtn.onclick = sendMessage;
+  input.onkeydown = e => e.key === "Enter" && sendMessage();
 
-socket.on("delete message", id => {
-  document.querySelector(`[data-id="${id}"]`)?.remove();
+  socket.on("chat message", data => {
+    const div = document.createElement("div");
+    div.className = "message " + (data.name === name ? "self" : "other");
+
+    div.innerHTML = `
+      <div>${data.msg}</div>
+      <div class="meta">${data.time}</div>
+    `;
+
+    messages.appendChild(div);
+    messages.scrollTop = messages.scrollHeight;
+  });
 });
