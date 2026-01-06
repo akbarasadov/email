@@ -1,77 +1,76 @@
 * {
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
 }
 
 body {
-  margin: 0;
-  background: #1c2733;
+  background: #0f172a;
   height: 100vh;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 #chat-container {
   width: 100%;
   max-width: 420px;
   height: 100vh;
-  background: #1f2d3d;
+  background: #0f172a;
   display: flex;
   flex-direction: column;
 }
 
 #messages {
   flex: 1;
-  padding: 12px;
+  padding: 10px;
   overflow-y: auto;
 }
 
+/* MESSAGE BUBBLES */
 .message {
   max-width: 75%;
   padding: 8px 12px;
   margin-bottom: 8px;
   border-radius: 12px;
   font-size: 14px;
-  line-height: 1.4;
+  position: relative;
+  word-wrap: break-word;
 }
 
 .self {
-  background: #3390ec;
-  color: #fff;
+  background: #2b5278;
+  color: white;
   margin-left: auto;
-  border-bottom-right-radius: 4px;
+  border-bottom-right-radius: 0;
 }
 
 .other {
-  background: #2b3e50;
-  color: #e6e6e6;
+  background: #1e293b;
+  color: white;
   margin-right: auto;
-  border-bottom-left-radius: 4px;
+  border-bottom-left-radius: 0;
 }
 
-/* #input-container {
-  display: flex;
-  padding: 10px;
-  background: #17212b;
+.name {
+  font-size: 11px;
+  opacity: 0.7;
+  margin-bottom: 3px;
 }
 
-#input {
-  flex: 1;
-  padding: 10px 14px;
-  border-radius: 20px;
-  border: none;
-  outline: none;
-  background: #0e1621;
-  color: #fff;
-} */
+.time {
+  font-size: 10px;
+  opacity: 0.6;
+  text-align: right;
+  margin-top: 4px;
+}
 
+/* INPUT */
 #input-container {
   display: flex;
-  align-items: center;
   padding: 10px;
-  background: #17212b;
-  z-index: 10;
-  position: relative;
+  background: #020617;
 }
 
 #input {
@@ -80,22 +79,39 @@ body {
   border-radius: 20px;
   border: none;
   outline: none;
-  font-size: 14px;
-  background: #0e1621;
-  color: #fff;
-  pointer-events: auto;
-}
-
-#input:focus {
-  border: 1px solid #4caf50;
+  background: #1e293b;
+  color: white;
 }
 
 #sendBtn {
   margin-left: 10px;
-  padding: 10px 16px;
-  border-radius: 20px;
+  padding: 0 16px;
+  border-radius: 50%;
   border: none;
   background: #3390ec;
-  color: #fff;
+  color: white;
+  font-size: 16px;
   cursor: pointer;
 }
+
+#sendBtn:hover {
+  background: #1d7fd8;
+}
+
+
+/* 
+.name {
+  font-size: 7px;
+  color: #7caddf;
+  font-family: Inter;
+}
+
+.time{
+  text-align: right;
+}
+
+.for_each_massage{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+} */
