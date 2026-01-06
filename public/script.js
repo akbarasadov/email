@@ -13,7 +13,7 @@ function sendMessage() {
   const msg = {
     id: Date.now(),
     name,
-    text: input.value,
+    msg: input.value,   // 👈 MUHIM
     time: new Date().toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit"
@@ -45,7 +45,7 @@ function addMessage(data) {
 
   div.innerHTML = `
     ${!isMe ? <div class="name">${data.name}</div> : ""}
-    <div>${data.text}</div>
+    <div>${data.msg}</div>
     <div class="meta">
       <span>${data.time}</span>
       ${isMe ? <span class="seen">✓✓</span> : ""}
