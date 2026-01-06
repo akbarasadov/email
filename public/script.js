@@ -13,7 +13,7 @@ function sendMessage() {
   const msg = {
     id: Date.now(),
     name,
-    msg: input.value,   // 👈 MUHIM
+    msg: input.value,
     time: new Date().toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit"
@@ -24,8 +24,12 @@ function sendMessage() {
   input.value = "";
 }
 
-sendBtn.onclick = sendMessage;
-input.onkeydown = e => e.key === "Enter" && sendMessage();
+sendBtn.addEventListener("click", sendMessage);
+input.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    sendMessage();
+  }
+});
 
 // ===== ESKI XABARLAR =====
 socket.on("old messages", msgs => {

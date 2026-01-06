@@ -49,7 +49,7 @@ body {
   border-bottom-left-radius: 4px;
 }
 
-#input-container {
+/* #input-container {
   display: flex;
   padding: 10px;
   background: #17212b;
@@ -63,6 +63,31 @@ body {
   outline: none;
   background: #0e1621;
   color: #fff;
+} */
+
+#input-container {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background: #17212b;
+  z-index: 10;
+  position: relative;
+}
+
+#input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  background: #0e1621;
+  color: #fff;
+  pointer-events: auto;
+}
+
+#input:focus {
+  border: 1px solid #4caf50;
 }
 
 #sendBtn {
