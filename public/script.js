@@ -53,8 +53,8 @@ function addMessage(data) {
     <div class="meta">
       <span class="time">${data.time}</span>
       ${isMe ? `<span class="seen">✓✓</span>` : ""}
+      ${isMe ? `<span class="delete-btn">🗑</span>` : ""}
     </div>
-    ${isMe ? `<span class="delete-btn">🗑</span>` : ""}
   `;
 
   if (isMe) {
